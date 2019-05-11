@@ -7,7 +7,18 @@ class InputWidget extends FieldWidget<Input> {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
+    return _State();
+  }
+
+  @override
+  getValue() {
     return null;
+  }
+}
+
+class _State extends State<InputWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Text('Input');
   }
 }

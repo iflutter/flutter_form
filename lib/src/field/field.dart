@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_form/src/widget/field_widget.dart';
+
 abstract class Field {
   List<Validator> validators;
   String key;
@@ -12,6 +15,8 @@ abstract class Field {
   }
 
   dynamic getValue();
+
+  FieldWidget build(BuildContext context);
 }
 
 abstract class Validator<T> {

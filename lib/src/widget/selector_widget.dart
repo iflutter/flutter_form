@@ -7,7 +7,19 @@ class SelectorWidget extends FieldWidget<Selector> {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
+    return _State();
+  }
+
+  @override
+  getValue() {
+    // TODO: implement getValue
     return null;
+  }
+}
+
+class _State extends State<SelectorWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Text('Selector');
   }
 }
