@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form/flutter_form.dart';
 
+// ignore: must_be_immutable
 class SelectorWidget extends FieldWidget<Selector> {
   SelectorWidget(Selector field, FormBuilderState formState, {Key key})
       : super(field, formState, key: key);

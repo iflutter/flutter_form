@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_form/flutter_form.dart';
 
 class FieldParser {
@@ -87,13 +88,16 @@ class FieldParser {
     Validator validator;
     switch (key) {
       case 'k':
+      case 'key':
         field.key = value;
         print("ttt filed.key ${field.key}");
         break;
       case 'l':
+      case 'label':
         field.label = value;
         break;
       case 'h':
+      case 'hint':
         field.hint = value;
         break;
       case 'v-req':
@@ -111,7 +115,7 @@ class FieldParser {
         }
         break;
       case 'suffix':
-        if(value!=null){
+        if (value != null) {
           _parseSuffix(field, value);
         }
         break;
@@ -124,17 +128,90 @@ class FieldParser {
     }
   }
 
-  void _parsePrefix(Field field, String prefix) {
-    prefix = prefix.trimLeft();
-    if (prefix.startsWith('str:')) {
-      int endArgs = prefix.indexOf(':',2);
-      //prefix.substring(4,endArgs);
+  int _ParseColor(String hexColor) {
+    hexColor = hexColor.toUpperCase();
+    hexColor = hexColor.replaceAll('#', '');
+    hexColor = hexColor.replaceAll('0X', '');
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  AppendedTextStyle _parseAppendedTextStyle(String argParts) {
+    AppendedTextStyle style = AppendedTextStyle();
+    var argsList = argParts.split(" ");
+    for (String argKV in argsList) {
+      int keyEnd = argKV.indexOf('\|');
+      if (keyEnd > 0) {
+        String key = argKV.substring(0, keyEnd);
+        String value = argKV.substring(keyEnd + 1, argKV.length);
+        switch (key) {
+          case 'color':
+            try {
+              style.color = _ParseColor(value);
+            } catch (e) {
+              print(e);
+            }
+            break;
+          case 'size':
+            try {
+              style.fontSize = double.parse(value);
+            } catch (e) {
+              print(e);
+            }
+            break;
+        }
+      }
+    }
+    return style;
+  }
+
+  static final _tagStrValue = 'str:';
+  static final _tagIdValue = 'str:';
+  static final _tagValueTagSplitorCode = ':'.codeUnitAt(0);
+
+  void _parsePrefix(Field field, String contentStr) {
+    contentStr = contentStr.trimLeft();
+    if (contentStr.startsWith(_tagStrValue)) {
+      int endArgs = 4;
+      for (int i = 4; i < contentStr.length; i++) {
+        if (contentStr.codeUnitAt(i) == _tagValueTagSplitorCode) {
+          endArgs = i;
+          break;
+        }
+      }
+      String argParts = contentStr.substring(4, endArgs);
+      field.prefixText = contentStr.substring(endArgs + 1, contentStr.length);
+      field.prefixTextStyle = _parseAppendedTextStyle(argParts);
+      //
+      print(
+          "ttt prefix ${field.prefixText} ${field.prefixTextStyle
+              .fontSize} ${field.prefixTextStyle.color}");
+    } else {
+      field.prefixId = contentStr;
     }
   }
 
-  void _parseSuffix(Field field, String suffix) {}
-
-  String parseStringContent(String str) {
-    //TODO
+  void _parseSuffix(Field field, String contentStr) {
+    contentStr = contentStr.trimLeft();
+    if (contentStr.startsWith(_tagStrValue)) {
+      int endArgs = 4;
+      for (int i = 4; i < contentStr.length; i++) {
+        if (contentStr.codeUnitAt(i) == _tagValueTagSplitorCode) {
+          endArgs = i;
+          break;
+        }
+      }
+      String argParts = contentStr.substring(4, endArgs);
+      field.suffixText = contentStr.substring(endArgs + 1, contentStr.length);
+      field.suffixTextStyle = _parseAppendedTextStyle(argParts);
+      //
+      print(
+          "ttt suffix ${field.suffixText} ${field.suffixTextStyle
+              .fontSize} ${field.suffixTextStyle.color}");
+    } else {
+      field.suffixId = contentStr;
+    }
   }
 }

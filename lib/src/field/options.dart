@@ -10,9 +10,9 @@ class Options extends Field {
     String prefixId,
     String suffixId,
     String prefixText,
-    TextStyle prefixTextStyle,
+    AppendedTextStyle prefixTextStyle,
     String suffixText,
-    TextStyle suffixTextStyle,
+    AppendedTextStyle suffixTextStyle,
     List<Validator> validators,
   }) : super(
             key: key,

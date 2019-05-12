@@ -9,9 +9,9 @@ abstract class Field {
   String prefixId;
   String suffixId;
   String prefixText;
-  TextStyle prefixTextStyle;
+  AppendedTextStyle prefixTextStyle;
   String suffixText;
-  TextStyle suffixTextStyle;
+  AppendedTextStyle suffixTextStyle;
 
   Field(
       {String key,
@@ -20,18 +20,18 @@ abstract class Field {
       String prefixId,
       String suffixId,
       String prefixText,
-      TextStyle prefixTextStyle,
+      AppendedTextStyle prefixTextStyle,
       String suffixText,
-      TextStyle suffixTextStyle,
+      AppendedTextStyle suffixTextStyle,
       List<Validator> validators}) {
     this.key = key;
     this.label = label;
     this.hint = hint;
     this.prefixId = prefixId;
     this.suffixId = suffixId;
-    this.prefixText= prefixText;
+    this.prefixText = prefixText;
     this.prefixTextStyle = this.prefixTextStyle;
-    this.suffixText= suffixText;
+    this.suffixText = suffixText;
     this.suffixTextStyle = suffixTextStyle;
     this.validators = validators;
   }
@@ -39,6 +39,11 @@ abstract class Field {
   dynamic getValue();
 
   FieldWidget build(FormBuilderState formState, BuildContext context);
+}
+
+class AppendedTextStyle {
+  double fontSize = double.nan;
+  int color = -1;
 }
 
 abstract class Validator<T> {

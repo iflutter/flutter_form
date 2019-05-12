@@ -8,8 +8,11 @@ class FormBuilder extends StatefulWidget {
   List<Field> fields;
   Map<String, StringWidgetBuilder> stringWidgetBuilders;
 
-  FormBuilder({String tipsRequiredFormat, String tipsHintFormat, List<
-      Field> fields, Map<String, StringWidgetBuilder> stringWidgetBuilders}) {
+  FormBuilder(
+      {String tipsRequiredFormat,
+      String tipsHintFormat,
+      List<Field> fields,
+      Map<String, StringWidgetBuilder> stringWidgetBuilders}) {
     this.tipsRequiredFormat = tipsRequiredFormat;
     this.tipsHintFormat = tipsHintFormat;
     this.fields = fields;
@@ -36,15 +39,15 @@ class FormBuilderState extends State<FormBuilder> {
     );
   }
 
-  Widget createStringWidget(BuildContext context,String str) {
+  Widget createStringWidget(BuildContext context, String strId) {
     if (widget.stringWidgetBuilders == null) {
       return null;
     }
-    StringWidgetBuilder builder = widget.stringWidgetBuilders[str];
+    StringWidgetBuilder builder = widget.stringWidgetBuilders[strId];
     if (builder == null) {
       return null;
     }
-    return builder(context,str);
+    return builder(context, strId);
   }
 
   _checkBuildForm(BuildContext context) {
@@ -63,39 +66,53 @@ class FormBuilderState extends State<FormBuilder> {
   }
 }
 
+// ignore: must_be_immutable
 abstract class FieldWidget<T extends Field> extends StatefulWidget {
   T field;
   FormBuilderState formState;
 
-  FieldWidget(this.field, this.formState, {Key key}) :super(key: key);
+  FieldWidget(this.field, this.formState, {Key key}) : super(key: key);
 
   Widget createPrefixWidget(BuildContext context) {
-    if (formState == null) {
-      return null;
-    }
-    return formState.createStringWidget(context,field.prefixId);
+    return _createStringWidgetInner(
+        context, field.prefixId, field.prefixText, field.prefixTextStyle);
   }
 
   Widget createSuffixWidget(BuildContext context) {
-    if (formState == null) {
-      return null;
+    return _createStringWidgetInner(
+        context, field.suffixId, field.suffixText, field.suffixTextStyle);
+  }
+
+  Widget _createStringWidgetInner(BuildContext context, String strId,
+      String text, AppendedTextStyle style) {
+    if (strId != null && strId.isNotEmpty && formState != null) {
+      return formState.createStringWidget(context, strId);
     }
-    return formState.createStringWidget(context,field.suffixId);
+    if (text != null && text.isNotEmpty) {
+      TextStyle textStyle;
+      if (style != null) {
+        textStyle =
+            TextStyle(fontSize: style.fontSize, color: Color(style.color));
+      }
+      return Text(
+        text,
+        style: textStyle,
+      );
+    }
+    return null;
   }
 }
 
 abstract class FieldWidgetState<T extends FieldWidget> extends State<T> {
-
   dynamic getValue();
 
   String validate();
 
-  void setValue(String value) {
-
-  }
+  void setValue(String value) {}
 }
 
-typedef StringWidgetBuilder = Widget Function(BuildContext context,String text);
+typedef StringWidgetBuilder = Widget Function(
+    BuildContext context, String textId);
 //abstract class FormFiled {
 //  List<Validator> validators;
 //

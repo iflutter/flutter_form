@@ -28,11 +28,21 @@ class MyHomePage extends StatefulWidget {
 
 final userInfoFormDefines = [
   fInput(
-      'k="name1",suffix="id:+",l="姓名1",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+      'k="name1",suffix="id::+",l="姓名1",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
   fInput(
-      'k="name2",suffix="str::元",l="姓名2",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+      'k="name1",suffix="id::>",l="姓名1",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
   fInput(
-      'k="name3",prefix="str:c_#FF0000 s_12:*",l="姓名3",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+      'k="name2",suffix="str:color|0xFF0000 size|16:元",l="姓名2",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+  fInput(
+      'k="name3",prefix="str:color|0xFF0000 size|12:*",l="姓名3",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+  fInput(
+      'k="name2",suffix="str:color|0xFF0000 size|16:元",l="姓名2",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+  fInput(
+      'k="name2",suffix="str:color|0xFF0000 size|16:元",l="姓名2",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+  fInput(
+      'k="name2",suffix="str:color|0xFF0000 size|16:元",l="姓名2",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
+  fInput(
+      'k="name2",suffix="str:color|0xFF0000 size|16:元",l="姓名2",h="+^请输&quot;入姓名&quot;",v-req ,v-len="6"'),
 ];
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -64,8 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               child: FormBuilder(
                 stringWidgetBuilders: {
-                  "ic_+": (BuildContext context, String str) {
+                  "id::+": (BuildContext context, String strId) {
                     return Icon(Icons.add);
+                  },
+                  "id::>": (BuildContext context, String strId) {
+                    return Icon(Icons.arrow_right);
                   }
                 },
                 tipsHintFormat: "hello hint %s",
