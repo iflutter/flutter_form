@@ -1,50 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form/flutter_form.dart';
-import 'package:flutter_form/src/widget/field_widget.dart';
 
 // ignore: must_be_immutable
 class FormBuilder extends StatefulWidget {
   String tipsRequiredFormat;
   String tipsHintFormat;
   List<Field> fields;
+  Map<String, StringWidgetBuilder> stringWidgetBuilders;
 
-  FormBuilder(
-      {String tipsRequiredFormat, String tipsHintFormat, List<Field> fields}) {
+  FormBuilder({String tipsRequiredFormat, String tipsHintFormat, List<
+      Field> fields, Map<String, StringWidgetBuilder> stringWidgetBuilders}) {
     this.tipsRequiredFormat = tipsRequiredFormat;
     this.tipsHintFormat = tipsHintFormat;
     this.fields = fields;
+    this.stringWidgetBuilders = stringWidgetBuilders;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return _FormState();
+    return FormBuilderState();
   }
 }
 
-class _FormState extends State<FormBuilder> {
-  List<FieldWidget> fieldWidgets;
+class FormBuilderState extends State<FormBuilder> {
+  final List<FieldWidget> fieldWidgets = List<FieldWidget>();
   Widget formWidget;
 
   @override
   Widget build(BuildContext context) {
-    checkBuildForm();
-    return Column(
-      children: fieldWidgets,
+    _checkBuildForm(context);
+    return Form(
+      child: Column(
+        children: fieldWidgets,
+      ),
     );
   }
 
-  checkBuildForm() {
-    if (fieldWidgets != null ||
-        widget.fields == null ||
-        widget.fields.isEmpty) {
+  Widget createStringWidget(BuildContext context,String str) {
+    if (widget.stringWidgetBuilders == null) {
+      return null;
+    }
+    StringWidgetBuilder builder = widget.stringWidgetBuilders[str];
+    if (builder == null) {
+      return null;
+    }
+    return builder(context,str);
+  }
+
+  _checkBuildForm(BuildContext context) {
+    if (fieldWidgets.isNotEmpty) {
       return;
     }
-
+    if (widget.fields == null || widget.fields.isEmpty) {
+      return;
+    }
     for (Field f in widget.fields) {
+      var w = f.build(this, context);
+      if (w != null) {
+        fieldWidgets.add(w);
+      }
     }
   }
 }
 
+abstract class FieldWidget<T extends Field> extends StatefulWidget {
+  T field;
+  FormBuilderState formState;
+
+  FieldWidget(this.field, this.formState, {Key key}) :super(key: key);
+
+  Widget createPrefixWidget(BuildContext context) {
+    if (formState == null) {
+      return null;
+    }
+    return formState.createStringWidget(context,field.prefixId);
+  }
+
+  Widget createSuffixWidget(BuildContext context) {
+    if (formState == null) {
+      return null;
+    }
+    return formState.createStringWidget(context,field.suffixId);
+  }
+}
+
+abstract class FieldWidgetState<T extends FieldWidget> extends State<T> {
+
+  dynamic getValue();
+
+  String validate();
+
+  void setValue(String value) {
+
+  }
+}
+
+typedef StringWidgetBuilder = Widget Function(BuildContext context,String text);
 //abstract class FormFiled {
 //  List<Validator> validators;
 //

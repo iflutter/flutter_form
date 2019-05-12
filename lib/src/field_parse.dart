@@ -27,7 +27,7 @@ class FieldParser {
     bool isValueStart = false;
     int valueStartIndex = 0;
     //
-
+    print("ttt on parse filed $exp");
     for (int i = 0; i < exp.length; i++) {
       final charCode = exp.codeUnitAt(i);
       if (isFindKey) {
@@ -82,18 +82,19 @@ class FieldParser {
     }
   }
 
-  void _onFindAttr(Field filed, String key, [String value]) {
-    //print('$key = ${value ?? "empty"}');
+  void _onFindAttr(Field field, String key, [String value]) {
+    print('ttt $key = ${value ?? "empty"}');
     Validator validator;
     switch (key) {
       case 'k':
-        filed.key = value;
+        field.key = value;
+        print("ttt filed.key ${field.key}");
         break;
       case 'l':
-        filed.label = value;
+        field.label = value;
         break;
       case 'h':
-        filed.hint = value;
+        field.hint = value;
         break;
       case 'v-req':
         validator = NotNull();
@@ -104,10 +105,36 @@ class FieldParser {
       case 'v-reg':
         validator = Reg();
         break;
+      case 'prefix':
+        if (value != null) {
+          _parsePrefix(field, value);
+        }
+        break;
+      case 'suffix':
+        if(value!=null){
+          _parseSuffix(field, value);
+        }
+        break;
     }
-    if (filed.validators == null) {
-      filed.validators = [];
+    if (validator != null) {
+      if (field.validators == null) {
+        field.validators = [];
+      }
+      field.validators.add(validator);
     }
-    filed.validators.add(validator);
+  }
+
+  void _parsePrefix(Field field, String prefix) {
+    prefix = prefix.trimLeft();
+    if (prefix.startsWith('str:')) {
+      int endArgs = prefix.indexOf(':',2);
+      //prefix.substring(4,endArgs);
+    }
+  }
+
+  void _parseSuffix(Field field, String suffix) {}
+
+  String parseStringContent(String str) {
+    //TODO
   }
 }

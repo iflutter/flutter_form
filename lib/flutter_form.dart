@@ -17,18 +17,18 @@ final parser = FieldParser.instance();
 
 Input fInput(String e) {
   var input = Input();
-  parser.parseFiled(e, Input());
+  parser.parseFiled(e, input);
   return input;
 }
 
-Input fOptions(String e) {
-  var input = Input();
-  parser.parseFiled(e, Input());
-  return input;
+Options fOptions(String e) {
+  var options = Options();
+  parser.parseFiled(e, options);
+  return options;
 }
 
-Input fSelector(String e) {
-  var input = Input();
-  parser.parseFiled(e, Input());
-  return input;
+Selector fSelector(String e) {
+  var selector = Selector();
+  parser.parseFiled(e, selector);
+  return selector;
 }
